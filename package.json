@@ -1,0 +1,25 @@
+{
+  "name": "chat_archive_application",
+  "version": "1.0.0",
+  "description": "A Node JS chat application that archives messages that have been exchanged by users.",
+  "main": "index.js",
+  "scripts": {
+    "start":"node server.js",
+    "server":"nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/morgan-gill/Chat_Archive_Application.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morgan-gill/Chat_Archive_Application/issues"
+  },
+  "homepage": "https://github.com/morgan-gill/Chat_Archive_Application#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.17"
+  }
+}
