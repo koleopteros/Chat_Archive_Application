@@ -1,19 +1,35 @@
 const app = require("./backend/app");
 const http = require('http');
-const io = require('socket.io');
+// const io = require('socket.io');
+const express = require('express');
+const exp = express();
+
 // const sapp = require("./socketFiles/sapp");
 
-const user = io.listen(3000).sockets;
+// const user = io.listen(3000).sockets;
 const hostname = '127.0.0.1';
 const port = process.env.PORT || "4000";
 
 app.set("port", port);
+exp.set('view engine', 'ejs');
+exp.use(express.static('public'));
+
+exp.get('/', (req, res) => {
+  res.render('index');
+});
+
+// Listen to port 3000
+expServer = exp.listen(3000);
+
+const user = require('socket.io')(expServer);
 
 const server = http.createServer(app);
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 
   user.on('connction', function(socket) {
+
+    console.log("Someone connected!");
 
     // let chat = db.collection('chats'); This line was from the video
 
