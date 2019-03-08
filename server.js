@@ -1,8 +1,10 @@
 const app = require("./backend/app");
 const http = require('http');
+
 // const io = require('socket.io');
 const express = require('express');
 const exp = express();
+const bodyParser = require('body-parser');
 
 // const sapp = require("./socketFiles/sapp");
 
@@ -11,12 +13,26 @@ const hostname = '127.0.0.1';
 const port = process.env.PORT || "4000";
 
 app.set("port", port);
+
 exp.set('view engine', 'ejs');
 exp.use(express.static('public'));
+exp.use(bodyParser.urlencoded({ extended: false }));
+exp.use(bodyParser.json());
 
 exp.get('/', (req, res) => {
   res.render('index');
 });
+
+exp.post('/chatroom', (req,res) => {
+  console.log(req.body);
+  res.render('chatroom')
+  /*
+  res.render('chatroom',{
+    username: req.body.username,
+    chatroom: req.body.chatroom
+  });
+  */
+})
 
 // Listen to port 3000
 expServer = exp.listen(3000);
