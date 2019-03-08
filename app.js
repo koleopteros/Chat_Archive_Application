@@ -2,14 +2,17 @@ const http = require('http');
 const config = require('./backend/config/config');
 const express = require('express');
 const app = express();
+const dbApp = require('./backend/app');
 const server = http.createServer(app);
+const dbServer = http.createServer(dbApp);
 const io = require('socket.io')(server);
 
-const port = config.appPort;
-
-server.listen(port, () => {
-    console.log(`Server listening at port ${port}`);
+server.listen(config.appPort, () => {
+    console.log(`Server listening at port ${config.appPort}`);
 });
+dbServer.listen(config.dbPort, ()=>{
+    console.log(`Database API listening at port ${config.dbPort}`);
+})
 
 app.use(express.static('public'));
 
