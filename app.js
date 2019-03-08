@@ -15,6 +15,7 @@ server.listen(port, () => {
 app.use(express.static('public'));
 
 let userCount = 0;
+let userlist = [];
 
 io.on('connection',(socket) => {
     var addedUser = false;
@@ -22,6 +23,7 @@ io.on('connection',(socket) => {
     socket.on('new message',(data) => {
         socket.broadcast.emit('new message', {
             username: socket.username,
+            chatroom: socket.chatroom,
             message: data
         });
     });
@@ -30,14 +32,36 @@ io.on('connection',(socket) => {
         //store user to socket session
         socket.username=username;
         ++numUsers;
+        userlist = userlist.concat(socket.username);
         addedUser = true;
         socket.emit('login',{
-            numUsers: numUsers
+            userlist: userlist
         });
         //announce user joined
         socket.broadcast.emit('user joined', {
             username: socket.username,
-            numUsers: numUsers
+            chatroom: socket.chatroom,
+            userlist: userlist
         });
+    });
+    socket.on('typing',() => {
+        socket.broadcast.emit('typing',{
+            username: socket.username
+        });
+    });
+    socket.on('stop typing', () => {
+        socket.broadcast.emit('stop typing',{
+            username:socket.username
+        });
+    });
+    socket.on('disconnect', () => {
+        if(addedUser){
+            userlist = userlist.filter((user)=>user!=socket.username);
+        }
+        socket.broadcast.emit('user left', {
+            username: socket.username,
+            chatroom: socket.chatroom,
+            userlist: userlist
+        }
     })
 });
