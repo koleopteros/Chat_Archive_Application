@@ -16,7 +16,11 @@ dbServer.listen(config.dbPort, ()=>{
 
 app.use(express.static('public'));
 
-let userCount = 0;
+app.set('view engine','ejs');
+app.get('/', (req,res) => {
+    res.render('index');
+})
+
 let userlist = [];
 
 io.on('connection',(socket) => {
