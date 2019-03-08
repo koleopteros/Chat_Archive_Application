@@ -1,4 +1,6 @@
 <!-- view/userlist.ejs -->
-<% users.forEach((user){ %>
-
-})
+<ul>
+    <% users.forEach((user){ %>
+        <li><%= user.username %></li>
+    <% }); %>
+</ul>
