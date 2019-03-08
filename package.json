@@ -4,8 +4,7 @@
   "description": "A Node JS chat application that archives messages that have been exchanged by users.",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "server": "nodemon app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,5 @@
 const http = require('http');
+const path = require('path');
 const config = require('./backend/config/config');
 const express = require('express');
 const app = express();
@@ -14,12 +15,7 @@ dbServer.listen(config.dbPort, ()=>{
     console.log(`Database API listening at port ${config.dbPort}`);
 })
 
-app.use(express.static('public'));
-
-app.set('view engine','ejs');
-app.get('/', (req,res) => {
-    res.render('index');
-})
+app.use(express.static(path.join(__dirname,'public')));
 
 let userlist = [];
 
