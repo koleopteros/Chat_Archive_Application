@@ -5,7 +5,7 @@ const io = require('socket.io');
 
 const user = io.listen(3000).sockets;
 const hostname = '127.0.0.1';
-const port = process.env.PORT || "3000";
+const port = process.env.PORT || "4000";
 
 app.set("port", port);
 
