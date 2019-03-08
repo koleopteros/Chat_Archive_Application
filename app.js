@@ -62,6 +62,6 @@ io.on('connection',(socket) => {
             username: socket.username,
             chatroom: socket.chatroom,
             userlist: userlist
-        }
-    })
+        });
+    });
 });
