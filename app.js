@@ -1,10 +1,9 @@
 const http = require('http');
-const io = require('socket.io');
-const config = require('./config/config');
+const config = require('./backend/config/config');
 const express = require('express');
-
 const app = express();
 const server = http.createServer(app);
+const io = require('socket.io')(server);
 
 const port = config.appPort;
 
