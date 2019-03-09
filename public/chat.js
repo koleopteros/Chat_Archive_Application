@@ -10,10 +10,17 @@ $(function(){
     var send_message = $("#send_message");
     var send_username = $("#send_username");
     var chatroom = $("#chatroom");
+    var init_username = $(".usernameInput");
+
+
 
     // Listen for connections
-    io.on('connection', (socket) => {
+    // io.on('connection', (socket) => {
         console.log('New user connected.');
+
+        // Attempting to recieve initial username value
+        socket.usernameInput = "Anonymous";
+        // ^ Attempting to recieve initial username value ^
 
         // Default User Name
         socket.username = "Anonymous";
@@ -57,6 +64,6 @@ $(function(){
         });
         // above this point, optional code can be found ^^
 
-    });
+    // });
 
 });

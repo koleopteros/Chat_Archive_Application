@@ -20,6 +20,9 @@ app.use(express.static(path.join(__dirname,'public')));
 let userlist = [];
 
 io.on('connection',(socket) => {
+
+    console.log("Potential client connected...");
+
     var addedUser = false;
 
     socket.on('new message',(data) => {
