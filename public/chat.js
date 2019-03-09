@@ -10,9 +10,14 @@ $(function(){
     var send_message = $("#send_message");
     var send_username = $("#send_username");
     var chatroom = $("#chatroom");
-    var init_username = $(".usernameInput");
+    var usernameInput = $(".usernameInput");
+    var clientWindow = $(window);
 
+    var loginPage = $('.login.page'); // The login page
+    var chatPage = $('.chat.page'); // The chatroom page
 
+    var clientUsername;
+    var currentUsernameInput = usernameInput.focus();
 
     // Listen for connections
     // io.on('connection', (socket) => {
@@ -20,6 +25,41 @@ $(function(){
 
         // Attempting to recieve initial username value
         socket.usernameInput = "Anonymous";
+
+        const setUsername = () => {
+            // clientUsername = cleanInput(currentUsernameInput.val().trim());
+            clientUsername = currentUsernameInput.val().trim();
+
+            // If the username is valid
+            if (clientUsername) {
+              loginPage.fadeOut();
+              chatPage.show();
+              loginPage.off('click');
+              //$currentInput = $inputMessage.focus();
+        
+              // Tell the server your username
+              // socket.emit('add user', clientUsername);
+              socket.emit('change_username', clientUsername);
+            }
+          }
+
+         clientWindow.keydown(event => {
+            // Auto-focus the current input when a key is typed
+            if (!(event.ctrlKey || event.metaKey || event.altKey)) {
+              //$currentInput.focus();
+            }
+            // When the client hits ENTER on their keyboard
+            if (event.which === 13) {
+              if (clientUsername) {
+                // sendMessage();
+                // socket.emit('stop typing');
+                // typing = false;
+              } else {
+                setUsername();
+                console.log("Username submitted");
+              }
+            }
+          });
         // ^ Attempting to recieve initial username value ^
 
         // Default User Name
