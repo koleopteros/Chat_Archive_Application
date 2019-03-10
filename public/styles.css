@@ -47,7 +47,7 @@
   /* Login Page */
   
   .login.page {
-    background-color: #000;
+    background-color: #0606e0;
   }
   
   .login.page .form {
@@ -85,9 +85,13 @@
   }
   
   /* Chat page */
+
+  #chatPageBanner {
+    text-align: center;
+  }
   
   #usernameDisplayArea {
-    border: 10px solid #000;
+    border: 10px solid #0606e0;
     margin: 20px;
   }
 
@@ -116,7 +120,7 @@
   
   .chatArea {
     height: 80%;
-    border: 10px solid #000;
+    border: 10px solid #0606e0;
     padding-bottom: 60px;
     margin: 20px;
   }
@@ -142,7 +146,7 @@
   /* Input */
   
   .inputMessage {
-    border: 10px solid #000;
+    border: 10px solid #0606e0;
     bottom: 0;
     height: 60px;
     left: 0;
