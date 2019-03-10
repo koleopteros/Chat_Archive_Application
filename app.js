@@ -68,6 +68,11 @@ io.on('connection',(socket) => {
     });
 
     socket.on('add_user', (username) => {
+
+        if(username==undefined){
+            username = "Anonymous";
+        }
+
         if(addedUser) return;
         //store user to socket session
         socket.username=username;
@@ -75,6 +80,7 @@ io.on('connection',(socket) => {
         addedUser = true;
         userTimeLog = userTimeLog.concat([socket.username, Date()]);
         console.log("Current User Time Log" + userTimeLog);
+
 
         //announce user joined
         socket.broadcast.emit('user joined', {
@@ -133,7 +139,6 @@ io.on('connection',(socket) => {
             let leaver = userlist.filter((user)=>user==socket.username);
             let newUserTimeLog = [];
             userlist = userlist.filter((user)=>user!=socket.username);
-            --numUsers;
             for(var iterator = 0; iterator < userTimeLog.length; iterator++){
                 if (userTimeLog[iterator][0] == leaver){
                     newUserTimeLog.concat(userTimeLog[iterator]);
@@ -146,7 +151,7 @@ io.on('connection',(socket) => {
             axios.post('http://localhost:4000/event/newEvent',{
                 type: config.events.disconn,
                 timestamp: Date.now(),
-                user: username,
+                user: socket.username,
                 val: `Room: ${socket.chatroom}`,
             }).then((res) => {
                 console.log(`Status: ${res.statusCode}`);

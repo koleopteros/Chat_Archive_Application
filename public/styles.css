@@ -77,6 +77,7 @@
   .login.page .usernameInput {
     font-size: 200%;
     letter-spacing: 3px;
+    margin-bottom:1.5em;
   }
   
   .login.page .title, .login.page .usernameInput {

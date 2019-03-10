@@ -9,5 +9,5 @@ module.exports = {
         msg: "MESSAGE",
         err: "ERROR",
         namechange: "NAME_CHANGE"
-    }
+    },
 };

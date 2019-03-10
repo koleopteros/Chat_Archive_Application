@@ -12,7 +12,8 @@ $(function(){
     var send_message = $("#send_message");
     var send_username = $("#send_username");
     var chatroom = $("#chatroom");
-    var usernameInput = $(".usernameInput");
+    var usernameInput = $("#usernameInput");
+    var chatroomInput = $("#chatroomInput");
     var inputMessage = $('.inputMessage'); // Input message input box
     var clientWindow = $(window);
 
@@ -34,7 +35,6 @@ $(function(){
 
         // If the username is valid
         if (clientUsername) {
-
             username = clientUsername;
             loginPage.fadeOut();
             chatPage.show();
@@ -56,7 +56,7 @@ $(function(){
                 setUsername();
                 console.log("Username submitted");
                 // UNDA.val(clientUsername);
-                document.getElementById("usernameDisplayArea").append(clientUsername);
+                UNDA.append(clientUsername);
                 socket.emit('username_selected', {
                     username: clientUsername
                 });
@@ -122,7 +122,7 @@ $(function(){
 
     // below this point, optional code can be found 
     // Emit typing
-    message.bind("keypress", () => {
+    inputMessage.bind("keypress", () => {
         socket.emit('typing')
     });
 
