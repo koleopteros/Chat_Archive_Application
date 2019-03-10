@@ -6,6 +6,7 @@ $(function(){
 
     // Buttons and inputs
     //var message = $("#message");
+    var UNDA = $("#usernameDisplayArea");
     var messages = $(".messages");
     var username = $("#username");
     var send_message = $("#send_message");
@@ -53,6 +54,9 @@ $(function(){
             } else {
                 setUsername();
                 console.log("Username submitted");
+                // UNDA.val(clientUsername);
+                document.getElementById("usernameDisplayArea").append(clientUsername);
+                
             }
         }
     });
