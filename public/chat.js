@@ -41,6 +41,7 @@ $(function(){
             loginPage.off('click');
 
             socket.emit('change_username', clientUsername);
+            
         }
     }
 
@@ -56,7 +57,10 @@ $(function(){
                 console.log("Username submitted");
                 // UNDA.val(clientUsername);
                 document.getElementById("usernameDisplayArea").append(clientUsername);
-                
+                socket.emit('username_selected', {
+                    username: clientUsername
+                });
+                socket.emit('add_user', clientUsername);
             }
         }
     });
@@ -90,7 +94,17 @@ $(function(){
     socket.on('new_message', (data) => {
         console.log(data)
         // chatroom.append("<p class='message'>" + data.username + ": " + data.message + "<p>")
-        messages.append("<p class='message'>" + data.message.username + ": " + data.message.message + "<p>")
+        messages.append("<p class='message'>" + data.message.username + ": " + data.message.message + "</p>")
+    });
+
+    // Client side announcement of a new incoming user.
+    socket.on('client_connection', (data) => {
+        messages.append("<p class='message'>" + data.message + "</p>");
+    });
+
+    // Client side announcement of a username selected.
+    socket.on('username_selected', (data) => {
+        messages.append("<p class='message'>" + data.username + " has joined. " + "</p>")
     });
 
     // Emit a username

@@ -18,10 +18,15 @@ dbServer.listen(config.dbPort, ()=>{
 app.use(express.static(path.join(__dirname,'public')));
 
 let userlist = [];
+let userTimeLog = [];
+var numUsers = 0;
 
 io.on('connection',(socket) => {
 
     console.log("Potential client connected...");
+    socket.broadcast.emit('client_connection', {
+        message: "A new user is connecting..."
+    });
 
     var addedUser = false;
 
@@ -39,14 +44,17 @@ io.on('connection',(socket) => {
             message: data
         });
         console.log("new_message broadcast");
+
     });
-    socket.on('add user', (username) => {
+    socket.on('add_user', (username) => {
         if(addedUser) return;
         //store user to socket session
         socket.username=username;
         ++numUsers;
         userlist = userlist.concat(socket.username);
         addedUser = true;
+        userTimeLog = userTimeLog.concat([socket.username, Date()]);
+        console.log("Current User Time Log" + userTimeLog);
         socket.emit('login',{
             userlist: userlist
         });
@@ -56,6 +64,9 @@ io.on('connection',(socket) => {
             chatroom: socket.chatroom,
             userlist: userlist
         });
+    });
+    socket.on('username_selected', (data) => {
+        socket.broadcast.emit('username_selected', data);
     });
     socket.on('typing',() => {
         socket.broadcast.emit('typing',{
@@ -69,7 +80,19 @@ io.on('connection',(socket) => {
     });
     socket.on('disconnect', () => {
         if(addedUser){
+            let leaver = userlist.filter((user)=>user==socket.username);
+            let newUserTimeLog = [];
             userlist = userlist.filter((user)=>user!=socket.username);
+            --numUsers;
+            for(var iterator = 0; iterator < userTimeLog.length; iterator++){
+                if (userTimeLog[iterator][0] == leaver){
+                    newUserTimeLog.concat(userTimeLog[iterator]);
+                }
+            }
+
+            // userTimeLog = userTimeLog.filter((user)=>user!=socket.username);
+            console.log("A user disconnected...");
+            console.log(leaver[0] + " has left.");
         }
         socket.broadcast.emit('user left', {
             username: socket.username,
