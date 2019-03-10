@@ -45,7 +45,8 @@ router.post('/event/newEvent', (req,res,next) =>{
     let newEvent = eventsModel({
         type: req.body.type,
         timestamp: req.body.timestamp,
-        user: req.body.user
+        user: req.body.user,
+        val: req.body.val,
     });
     newEvent.save((err)=>{
         if(err) throw err;
