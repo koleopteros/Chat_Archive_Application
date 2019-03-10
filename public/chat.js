@@ -104,6 +104,11 @@ $(function(){
         })
     });
 
+    // Listen for an login emit
+    socket.on('login',(data) => {
+        updateUserList(data.userlist);
+    })
+
     // Listen on new_message
     socket.on('new_message', (data) => {
         console.log(data)
@@ -113,12 +118,20 @@ $(function(){
 
     // Client side announcement of a new incoming user.
     socket.on('client_connection', (data) => {
+        updateUserList(data.userlist);
         messages.append("<p class='message'>" + data.message + "</p>");
     });
 
-    // Client side announcement of a username selected.
+    // Client side announcement of a username selected. aka user joined
     socket.on('username_selected', (data) => {
+        updateUserList(data.userlist);
+        console.log(data.userlist);
         messages.append("<p class='message'>" + data.username + " has joined. " + "</p>")
+    });
+
+    socket.on('user left', (data) => {
+        updateUserList(data.userlist);
+        messages.append(`<p class='message'>${data.username} has left room ${data.chatroom}.</p>`)
     });
 
     // Emit a username
@@ -136,22 +149,15 @@ $(function(){
         socket.username = data.username;
     });
     */
+   
+    function updateUserList(userlist){
+        let userlistDisplay = document.getElementById("users");
 
-    // below this point, optional code can be found 
-    // Emit typing
-    inputMessage.bind("keypress", () => {
-        socket.emit('typing')
-    });
-
-    // Listen on typing
-    socket.on('typing', (data) => {
-        feedback.html("<p><i>" + data.username + " is typing a message..." + "</p></i>")
-    });
-
-    // Listen on typing
-    socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', {username : socket.username})
-    });
-    // above this point, optional code can be found ^^
-
+        let displayString = ``;
+        for(user of userlist){
+            console.log(`adding ${user} to list`);
+            displayString = displayString.concat(`<p class='message'>${user}</p>`);    
+        }
+        userlistDisplay.innerHTML = displayString;
+    }
 });

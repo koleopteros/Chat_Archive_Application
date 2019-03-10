@@ -30,7 +30,8 @@ io.on('connection',(socket) => {
 
     console.log("Potential client connected...");
     socket.to(chatroom).emit('client_connection', {
-        message: "A new user is connecting..."
+        message: "A new user is connecting...",
+        userlist: userlist,
     });
 
     var addedUser = false;
@@ -42,7 +43,6 @@ io.on('connection',(socket) => {
 
         socket.to(chatroom).emit('new_message', {
             username: usr,
-            chatroom: room,
             message: data
         })
 
@@ -77,62 +77,52 @@ io.on('connection',(socket) => {
         if(addedUser) return;
         //store user to socket session
         socket.username=data.username;
-        userlist = userlist.concat(socket.username);
         addedUser = true;
         userTimeLog = userTimeLog.concat([socket.username, Date()]);
         console.log(`${username} connected to room ${chatroom}`);
         socket.join(chatroom);
 
-
-        //announce user joined
-        socket.to(chatroom).emit('user joined', {
-            username: socket.username,
-            chatroom: socket.chatroom,
-            userlist: userlist
-        });
-
         axios.post(`${config.baseURL}:${config.dbPort}/event/newEvent`,{
             type: config.events.conn,
             timestamp: Date.now(),
             user: username,
-            val:`Room: ${socket.chatroom}`,
+            val:`Room: ${chatroom}`,
         }).then((res) => {
             console.log(`Status: ${res.statusCode}`);
         }).catch((err) => {
             console.log(err);
         })
 
-        socket.to(chatroom).emit('login',{
-            userlist: userlist
-        });
+        socket.to(chatroom).emit('update userlist', userlist);
     });
 
     socket.on('change_username', (data) => {
+        username = data.username;
+        chatroom = data.chatroom;
         axios.post(`${config.baseURL}:${config.dbPort}/event/newEvent`,{
             type: config.events.namechange,
             timestamp: Date.now(),
-            user: socket.username,
+            user: username,
             val: `${data.chatroom}`,
         }).then((res) => {
             console.log(`Status: ${res.statusCode}`);
         }).catch((err) => {
             console.log(err);
         })
+        socket.to(chatroom).emit('change_username', {
+            username:username,
+            chatroom:chatroom,
+            userlist:userlist,
+        })
     })
 
     socket.on('username_selected', (data) => {
-        socket.to(chatroom).emit('username_selected', data);
-    });
-
-    socket.on('typing',() => {
-        socket.to(chatroom).emit('typing',{
-            username: socket.username
-        });
-    });
-
-    socket.on('stop typing', () => {
-        socket.to(chatroom).emit('stop typing',{
-            username:socket.username
+        userlist = userlist.concat(data.username);
+        console.log(userlist);
+        socket.to(chatroom).emit('username_selected', {
+            username: data.username,
+            chatroom: data.chatroom,
+            userlist: userlist,
         });
     });
 
@@ -153,17 +143,17 @@ io.on('connection',(socket) => {
             axios.post(`${config.baseURL}:${config.dbPort}/event/newEvent`,{
                 type: config.events.disconn,
                 timestamp: Date.now(),
-                user: socket.username,
-                val: `Room: ${socket.chatroom}`,
+                user: username,
+                val: `Room: ${chatroom}`,
             }).then((res) => {
-                console.log(`Status: ${res.statusCode}`);
+                console.log(`[${chatroom}] ${username} disconnected.`);
             }).catch((err) => {
                 console.log(err);
             })
         }
         socket.to(chatroom).emit('user left', {
-            username: socket.username,
-            chatroom: socket.chatroom,
+            username: username,
+            chatroom: chatroom,
             userlist: userlist
         });
     });
