@@ -32,6 +32,14 @@ io.on('connection',(socket) => {
             message: data
         });
     });
+    socket.on('new_message', (data) => {
+        socket.broadcast.emit('new_message', {
+            username: socket.username,
+            chatroom: socket.chatroom,
+            message: data
+        });
+        console.log("new_message broadcast");
+    });
     socket.on('add user', (username) => {
         if(addedUser) return;
         //store user to socket session
