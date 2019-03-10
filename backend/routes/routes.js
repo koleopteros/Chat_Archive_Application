@@ -50,7 +50,7 @@ router.post('/event/newEvent', (req,res,next) =>{
     });
     newEvent.save((err)=>{
         if(err) throw err;
-        console.log("Event recorded!");
+        console.log(`${req.body.type} Event Recorded!`);
     });
     res.send(newEvent);
 });

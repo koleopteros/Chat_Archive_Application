@@ -32,14 +32,22 @@ io.on('connection',(socket) => {
 
     var addedUser = false;
 
-    socket.on('new message',(data) => {
+    socket.on('new_message',(data) => {
         let timestamp = Date.now()
+        let usr = socket.username;
+        let room = socket.chatroom;
+
+        socket.broadcast.emit('new_message', {
+            username: usr,
+            chatroom: room,
+            message: data
+        });
 
         axios.post('http://localhost:4000/event/newEvent',{
             type: config.events.msg,
             timestamp: timestamp,
-            user: socket.username,
-            val: `Room: ${socket.chatroom}`,
+            user: usr,
+            val: `Room: ${room}`,
         }).then((res) => {
             console.log(`Status: ${res.statusCode}`);
         }).catch((err) => {
@@ -47,21 +55,16 @@ io.on('connection',(socket) => {
         })
 
         axios.post('http://localhost:4000/chat/newMessage', {
-            room: socket.chatroom,
+            room: room,
             timestamp: timestamp,
-            sender: socket.username,
-            message: data,
+            sender: usr,
+            message: data.message,
         }).then((res) => {
             console.log(`Status: ${res.statusCode}`);
         }).catch((err) => {
             console.log(err);
         })
 
-        socket.broadcast.emit('new message', {
-            username: socket.username,
-            chatroom: socket.chatroom,
-            message: data
-        });
     });
 
     socket.on('add_user', (username) => {
@@ -72,6 +75,13 @@ io.on('connection',(socket) => {
         addedUser = true;
         userTimeLog = userTimeLog.concat([socket.username, Date()]);
         console.log("Current User Time Log" + userTimeLog);
+
+        //announce user joined
+        socket.broadcast.emit('user joined', {
+            username: socket.username,
+            chatroom: socket.chatroom,
+            userlist: userlist
+        });
 
         axios.post('http://localhost:4000/event/newEvent',{
             type: config.events.conn,
@@ -85,12 +95,6 @@ io.on('connection',(socket) => {
         })
 
         socket.emit('login',{
-            userlist: userlist
-        });
-        //announce user joined
-        socket.broadcast.emit('user joined', {
-            username: socket.username,
-            chatroom: socket.chatroom,
             userlist: userlist
         });
     });
