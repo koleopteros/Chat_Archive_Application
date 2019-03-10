@@ -101,7 +101,7 @@ io.on('connection',(socket) => {
         }).catch((err) => {
             console.log(err);
         })
-
+        //currently unused User List update
         socket.to(chatroom).emit('login',{
             userlist: userlist
         });

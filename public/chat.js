@@ -136,22 +136,4 @@ $(function(){
         socket.username = data.username;
     });
     */
-
-    // below this point, optional code can be found 
-    // Emit typing
-    inputMessage.bind("keypress", () => {
-        socket.emit('typing')
-    });
-
-    // Listen on typing
-    socket.on('typing', (data) => {
-        feedback.html("<p><i>" + data.username + " is typing a message..." + "</p></i>")
-    });
-
-    // Listen on typing
-    socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', {username : socket.username})
-    });
-    // above this point, optional code can be found ^^
-
 });
