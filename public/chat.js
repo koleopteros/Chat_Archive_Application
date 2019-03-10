@@ -143,7 +143,7 @@ $(function(){
         socket.on('new_message', (data) => {
             console.log(data)
             // chatroom.append("<p class='message'>" + data.username + ": " + data.message + "<p>")
-            messages.append("<p class='message'>" + data.username + ": " + data.message + "<p>")
+            messages.append("<p class='message'>" + data.message.username + ": " + data.message.message + "<p>")
 
         });
 
