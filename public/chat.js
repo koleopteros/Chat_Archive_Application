@@ -96,6 +96,7 @@ $(function(){
             // socket.emit('new message', message);
             socket.emit('new_message', {username: clientUsername, message: providedMessage});
             console.log("Emitting message clause passed.");
+            messages.append("<p class='message'>" + clientUsername + ": " + providedMessage + "<p>")
             }
         }
 
