@@ -5,7 +5,7 @@ $(function(){
 
 
     // Buttons and inputs
-    var message = $("#message");
+    //var message = $("#message");
     var messages = $(".messages");
     var username = $("#username");
     var send_message = $("#send_message");
@@ -94,7 +94,7 @@ $(function(){
                //var transmitData = {username: username, message: message}
             // tell server to execute 'new message' and send along one parameter
             // socket.emit('new message', message);
-            socket.emit('new_message', {username: username, message: providedMessage});
+            socket.emit('new_message', {username: clientUsername, message: providedMessage});
             console.log("Emitting message clause passed.");
             }
         }
