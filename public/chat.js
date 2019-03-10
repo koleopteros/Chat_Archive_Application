@@ -21,6 +21,7 @@ $(function(){
     var chatPage = $('.chat.page'); // The chatroom page
 
     var clientUsername;
+    var clientChatroom;
     var currentUsernameInput = usernameInput.focus();
 
 
@@ -32,7 +33,7 @@ $(function(){
     const setUsername = () => {
 
         clientUsername = currentUsernameInput.val().trim();
-
+        clientChatroom = chatroomInput.val();
         // If the username is valid
         if (clientUsername) {
             username = clientUsername;
@@ -40,7 +41,10 @@ $(function(){
             chatPage.show();
             loginPage.off('click');
 
-            socket.emit('change_username', clientUsername);
+            socket.emit('change_username', {
+                username: clientUsername,
+                chatroom: clientChatroom,
+            });
             
         }
     }
@@ -54,13 +58,15 @@ $(function(){
                 sendMessage();
             } else {
                 setUsername();
-                console.log("Username submitted");
-                // UNDA.val(clientUsername);
-                UNDA.append(clientUsername);
+                UNDA.append(clientUsername + `<pre>    Room: ${clientChatroom}</pre>`);
                 socket.emit('username_selected', {
-                    username: clientUsername
+                    username: clientUsername,
+                    chatroom: clientChatroom,
                 });
-                socket.emit('add_user', clientUsername);
+                socket.emit('add_user',{ 
+                    username: clientUsername, 
+                    chatroom: clientChatroom,
+                 });
             }
         }
     });
@@ -75,7 +81,11 @@ $(function(){
 
             inputMessage.val('');
 
-            socket.emit('new_message', {username: clientUsername, message: providedMessage});
+            socket.emit('new_message', {
+                username: clientUsername, 
+                chatroom: clientChatroom, 
+                message: providedMessage
+            });
             console.log("Emitting message clause passed.");
             messages.append("<p class='message'>" + clientUsername + ": " + providedMessage + "<p>")
         }
@@ -87,7 +97,11 @@ $(function(){
 
     // Emit message
     send_message.click(function(){
-        socket.emit('new_message', {message : inputMessage.val()})
+        socket.emit('new_message', {
+            username: clientUsername,
+            chatroom: clientChatroom,
+            message : inputMessage.val(),
+        })
     });
 
     // Listen on new_message
@@ -108,9 +122,12 @@ $(function(){
     });
 
     // Emit a username
-    send_username.click(function(){
+    send_username.click(() => {
         console.log(username.val())
-        socket.emit('change_username', {username : username.val()})
+        socket.emit('change_username', {
+            username : username.val(),
+            chatroom: clientChatroom,
+        })
     });
 
     /*
