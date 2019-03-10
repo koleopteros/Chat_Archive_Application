@@ -44,7 +44,7 @@ io.on('connection',(socket) => {
             message: data
         });
         console.log("new_message broadcast");
-
+        
     });
     socket.on('add_user', (username) => {
         if(addedUser) return;
@@ -89,8 +89,6 @@ io.on('connection',(socket) => {
                     newUserTimeLog.concat(userTimeLog[iterator]);
                 }
             }
-
-            // userTimeLog = userTimeLog.filter((user)=>user!=socket.username);
             console.log("A user disconnected...");
             console.log(leaver[0] + " has left.");
         }
