@@ -22,6 +22,6 @@ module.exports = {
         disconn:"DISCONNECT",
         msg: "MESSAGE",
         err: "ERROR",
-        namechange: "NAME_CHANGE"
+        namechange: "NAME_CHANGE",
     },
 };
