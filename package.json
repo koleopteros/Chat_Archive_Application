@@ -4,7 +4,8 @@
   "description": "A Node JS chat application that archives messages that have been exchanged by users.",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run start",
   },
   "repository": {
     "type": "git",
