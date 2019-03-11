@@ -18,9 +18,16 @@ server.listen(config.appPort, () => {
 dbServer.listen(config.dbPort, ()=>{
     console.log(`Database API listening at ${config.baseURL}:${config.dbPort}`);
 })
-
-app.use(express.static(path.join(__dirname,'public')));
-
+if(process.env.NODE_ENV === "production")
+{
+    app.use(express.static(path.join(__dirname,'build')));
+    app.get('*', (req,res)=>{
+        res.sendFile(path.resolve(__dirname,'build','index.html'))
+    })
+}
+else{
+    app.use(express.static(path.join(__dirname,'public')));
+}
 let userlist = [];
 let userTimeLog = [];
 
@@ -93,7 +100,9 @@ io.on('connection',(socket) => {
             console.log(err);
         })
 
-        socket.to(chatroom).emit('update userlist', userlist);
+        socket.to(chatroom).emit('login', {
+            userlist:userlist,
+        });
     });
 
     socket.on('change_username', (data) => {
