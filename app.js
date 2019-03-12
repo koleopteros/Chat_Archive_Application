@@ -13,10 +13,10 @@ const axios = require('axios');
 axios.default.port = config.dbPort;
 
 server.listen(config.appPort, () => {
-    console.log(`Server listening at port ${config.baseURL}:${config.appPort}`);
+    console.log(`Server listening at port ${config.baseURL}:${process.env.PORT}`);
 });
 dbServer.listen(config.dbPort, ()=>{
-    console.log(`Database API listening at ${config.baseURL}:${config.dbPort}`);
+    console.log(`Database API listening at ${config.baseURL}:${process.env.PORT}`);
 })
 if(process.env.NODE_ENV === "production")
 {

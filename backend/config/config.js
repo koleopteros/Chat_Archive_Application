@@ -3,7 +3,7 @@ let appPort;
 let baseUrl;
 
 if( process.env.NODE_ENV === "production" ){
-    dbport = process.env.PORT;
+    //dbport = process.env.PORT;
     appPort = process.env.PORT;
     baseUrl = "https://chat-archive-application.herokuapp.com" 
 }else{
